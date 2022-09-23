@@ -1,4 +1,5 @@
 out/
+cover.out
 .idea/
 *.swp
 bin/
