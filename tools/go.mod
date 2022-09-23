@@ -1,4 +1,4 @@
-module github.com/mmihic/docmgr/tools
+module github.com/mmihic/golib/tools
 
 go 1.18
 
