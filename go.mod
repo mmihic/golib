@@ -1,4 +1,4 @@
-module golib
+module github.com/mmihic/golib
 
 go 1.18
 
