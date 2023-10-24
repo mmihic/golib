@@ -1,6 +1,6 @@
 module github.com/mmihic/golib
 
-go 1.18
+go 1.20
 
 require (
 	github.com/fatih/structtag v1.2.0
