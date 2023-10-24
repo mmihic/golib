@@ -3,8 +3,6 @@ package httpclient
 import (
 	"context"
 	"fmt"
-	"github.com/mmihic/golib/src/pkg/httpx"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -12,6 +10,10 @@ import (
 	"regexp"
 	"strconv"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+
+	"github.com/mmihic/golib/src/pkg/httpx"
 )
 
 var (

@@ -2,8 +2,9 @@ package workers
 
 import (
 	"errors"
-	"go.uber.org/multierr"
 	"sync/atomic"
+
+	"go.uber.org/multierr"
 )
 
 var (

@@ -3,8 +3,9 @@ package jsonx
 
 import (
 	"fmt"
-	"github.com/fatih/structtag"
 	"reflect"
+
+	"github.com/fatih/structtag"
 )
 
 // Field is a JSON encoded field.

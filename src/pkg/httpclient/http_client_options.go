@@ -2,8 +2,9 @@ package httpclient
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 // CallOption is an option to modify a request.

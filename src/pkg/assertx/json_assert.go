@@ -2,9 +2,10 @@
 package assertx
 
 import (
+	"testing"
+
 	"github.com/nsf/jsondiff"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 // JSONEq asserts to JSON documents are exact matches, producing a friendlier

@@ -2,11 +2,11 @@ package httpx
 
 import (
 	"context"
-	"github.com/pkg/errors"
-
 	"fmt"
 	"net/http"
 	"reflect"
+
+	"github.com/pkg/errors"
 )
 
 // MustJSONHandler creates a JSON handler from a function, panicking if the

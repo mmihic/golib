@@ -1,10 +1,11 @@
 package workers
 
 import (
-	"github.com/pkg/errors"
-	"github.com/stretchr/testify/require"
 	"sync"
 	"testing"
+
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/require"
 )
 
 func TestErrorCh_HasErrors(t *testing.T) {

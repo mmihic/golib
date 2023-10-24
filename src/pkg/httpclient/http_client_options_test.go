@@ -2,13 +2,15 @@ package httpclient
 
 import (
 	"context"
-	"github.com/mmihic/golib/src/pkg/httpx"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
-	"pingdom_sla/src/pkg/httptestx"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"pingdom_sla/src/pkg/httptestx"
+
+	"github.com/mmihic/golib/src/pkg/httpx"
 )
 
 func TestWithQueryParams(t *testing.T) {

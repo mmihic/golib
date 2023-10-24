@@ -4,8 +4,9 @@ package httptestx
 
 import (
 	"fmt"
-	"github.com/mmihic/golib/src/pkg/httpx"
 	"net/http"
+
+	"github.com/mmihic/golib/src/pkg/httpx"
 )
 
 // ServerCheck returns a client error if a server-side test assertion failed.
