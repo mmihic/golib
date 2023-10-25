@@ -97,7 +97,7 @@ func (c jsonContent) ContentType() string {
 
 // A Client is a client that can send and retrieve JSON documents.
 type Client interface {
-	SetOptions(opts ...CallOption) error
+	SetDefaultCallOptions(opts ...CallOption) error
 	Get(ctx context.Context, path string, out Unmarshaller, opts ...CallOption) error
 	Put(ctx context.Context, path string, in Marshaller, out Unmarshaller, opts ...CallOption) error
 	Post(ctx context.Context, path string, in Marshaller, out Unmarshaller, opts ...CallOption) error
@@ -106,16 +106,26 @@ type Client interface {
 }
 
 // NewClient creates a new HTTP client pointed at the given URL.
-func NewClient(baseURL string, opts ...CallOption) (Client, error) {
+func NewClient(baseURL string, defaultCallOpts ...CallOption) (Client, error) {
+	return NewClientWithHTTP(baseURL, nil, defaultCallOpts...)
+}
+
+// NewClientWithHTTP creates a new typed client around an HTTP client.
+func NewClientWithHTTP(baseURL string, httpclient *http.Client,
+	defaultCallOpts ...CallOption) (Client, error) {
 	u, err := url.Parse(baseURL)
 	if err != nil {
 		return nil, err
 	}
 
+	if httpclient == nil {
+		httpclient = &http.Client{}
+	}
+
 	return &client{
 		url:  u,
-		opts: opts,
-		http: &http.Client{}, // TODO(mmihic): Options for the HTTP client
+		opts: defaultCallOpts,
+		http: httpclient,
 	}, nil
 }
 
@@ -130,7 +140,7 @@ func (c *client) SetTraceLogger(traceLogger *zap.Logger) {
 	c.traceLogger = traceLogger
 }
 
-func (c *client) SetOptions(opts ...CallOption) error {
+func (c *client) SetDefaultCallOptions(opts ...CallOption) error {
 	c.opts = append(c.opts, opts...)
 	return nil
 }
