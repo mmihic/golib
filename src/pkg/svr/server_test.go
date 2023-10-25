@@ -70,8 +70,8 @@ func TestServer(t *testing.T) {
 		insecureEndpointURL = svr.EndpointURL(insecureEndpoint)
 		secureEndpointURL   = svr.EndpointURL(secureEndpoint)
 	)
-	assert.Regexpf(t, reHTTP, insecureEndpointURL, "insecure endpoint URL is not heep")
-	assert.Regexpf(t, reHTTPs, secureEndpointURL, "secure endpoint URL is not heep")
+	assert.Regexpf(t, reHTTP, insecureEndpointURL, "insecure endpoint URL is not http")
+	assert.Regexpf(t, reHTTPs, secureEndpointURL, "secure endpoint URL is not https")
 
 	// Dispatch requests against each of the endpoints.
 	for _, tt := range []struct {
