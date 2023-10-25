@@ -82,9 +82,9 @@ test:
 test-cover:
 	test_args="-cover -coverprofile=cover.out" make test
 
-
 # Cleans up binaries
 clean:
+	go clean -testcache
 	rm -rf $(BUILD)
 
 # Build all services
