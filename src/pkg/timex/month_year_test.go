@@ -1,6 +1,7 @@
 package timex
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
@@ -124,4 +125,18 @@ func TestMonthsBetween(t *testing.T) {
 	first, second := MustParseMonthYear("2021-10"), MustParseMonthYear("2022-03")
 	assert.Equal(t, 6, MonthsBetween(first, second))
 	assert.Equal(t, 6, MonthsBetween(second, first))
+}
+
+func TestMonthYearJSON(t *testing.T) {
+	type Embedded struct {
+		When MonthYear `json:"when"`
+	}
+
+	var em Embedded
+	err := json.Unmarshal([]byte(`{"when": "2022-09"}`), &em)
+	require.NoError(t, err)
+
+	assert.Equal(t, Embedded{
+		When: MonthYear{Year: 2022, Month: time.September},
+	}, em)
 }

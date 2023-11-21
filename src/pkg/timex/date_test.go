@@ -1,6 +1,7 @@
 package timex
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 	"time"
@@ -94,4 +95,17 @@ func TestDate_NextDay(t *testing.T) {
 			assert.Equal(t, want, actual)
 		})
 	}
+}
+
+func TestDateJSON(t *testing.T) {
+	type Embedded struct {
+		When Date `json:"when"`
+	}
+
+	var em Embedded
+	err := json.Unmarshal([]byte(`{"when":"2023-11-14"}`), &em)
+	require.NoError(t, err)
+	assert.Equal(t, Embedded{
+		When: Date{Day: 14, Month: time.November, Year: 2023},
+	}, em)
 }

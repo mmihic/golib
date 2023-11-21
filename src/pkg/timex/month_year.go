@@ -120,11 +120,12 @@ func (my MonthYear) Less(other MonthYear) bool {
 
 // MonthsBetween returns the number of months between two (month, year)
 func MonthsBetween(from, to MonthYear) int {
-	if to.Less(from) {
-		from, to = to, from
+	monthsBetween := (from.Year + int(from.Month)) - (to.Year + int(to.Month))
+	if monthsBetween < 0 {
+		return -monthsBetween
 	}
 
-	return (from.Year + int(from.Month)) - (to.Year + int(to.Month))
+	return monthsBetween
 }
 
 var (

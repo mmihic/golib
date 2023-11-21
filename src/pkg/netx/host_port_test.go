@@ -13,6 +13,7 @@ func TestHostPort(t *testing.T) {
 	require.NoError(t, err)
 	assert.Equal(t, hostPort.Host, "foo.bar.com")
 	assert.Equal(t, hostPort.Port, 8080)
+	assert.Equal(t, "foo.bar.com:8080", hostPort.String())
 }
 
 func TestHostPortError(t *testing.T) {
