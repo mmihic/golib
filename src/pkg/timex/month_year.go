@@ -87,6 +87,21 @@ func (my MonthYear) NextMonth() MonthYear {
 	}
 }
 
+// After returns true if this date is after another.
+func (my MonthYear) After(other MonthYear) bool {
+	return my.CompareTo(other) > 0
+}
+
+// Before returns true if this date is before another date.
+func (my MonthYear) Before(other MonthYear) bool {
+	return my.CompareTo(other) < 0
+}
+
+// Equal returns true if this date is equal to another date.
+func (my MonthYear) Equal(other MonthYear) bool {
+	return my.CompareTo(other) == 0
+}
+
 // CompareTo compares two (month, year). Returns:
 //
 //	-1 if this MonthYear is earlier than the provided MonthYear

@@ -75,6 +75,21 @@ func (d Date) NextDay() Date {
 	}
 }
 
+// After returns true if this date is after another.
+func (d Date) After(other Date) bool {
+	return d.CompareTo(other) > 0
+}
+
+// Before returns true if this date is before another date.
+func (d Date) Before(other Date) bool {
+	return d.CompareTo(other) < 0
+}
+
+// Equal returns true if this date is equal to another date.
+func (d Date) Equal(other Date) bool {
+	return d.CompareTo(other) == 0
+}
+
 // CompareTo compares this date to another;
 func (d Date) CompareTo(other Date) int {
 	if d.Year > other.Year {
