@@ -193,7 +193,7 @@ func assertHTTPError(t *testing.T, err error, statusCode int) bool {
 		return false
 	}
 
-	httpErr, ok := err.(*Error)
+	httpErr, ok := UnwrapError(err)
 	if !assert.True(t, ok, "error is a %s not an HTTP error", reflect.TypeOf(err).Name()) {
 		return false
 	}

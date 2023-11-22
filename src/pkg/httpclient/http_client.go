@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -33,6 +34,21 @@ func NewError(statusCode int, r io.Reader) error {
 	err := &Error{StatusCode: statusCode}
 	_, _ = io.Copy(&err.Body, r)
 	return err
+}
+
+// UnwrapError returns the underlying HTTP client
+// error, if the error wraps an HTTP client error.
+func UnwrapError(err error) (*Error, bool) {
+	unwrapped := err
+	for unwrapped != nil {
+		if httperr, ok := unwrapped.(*Error); ok {
+			return httperr, ok
+		}
+
+		unwrapped = errors.Unwrap(err)
+	}
+
+	return nil, false
 }
 
 // A Marshaller is data that is sent as part of a request.
