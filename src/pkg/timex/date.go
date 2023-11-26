@@ -75,6 +75,11 @@ func (d Date) NextDay() Date {
 	}
 }
 
+// IsZero returns true if the date value is not set.
+func (d Date) IsZero() bool {
+	return d.Day == 0 && d.Month == 0 && d.Year == 0
+}
+
 // After returns true if this date is after another.
 func (d Date) After(other Date) bool {
 	return d.CompareTo(other) > 0

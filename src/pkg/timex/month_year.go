@@ -87,6 +87,11 @@ func (my MonthYear) NextMonth() MonthYear {
 	}
 }
 
+// IsZero returns true if the month/year is not set.
+func (my MonthYear) IsZero() bool {
+	return my.Month == 0 && my.Year == 0
+}
+
 // After returns true if this date is after another.
 func (my MonthYear) After(other MonthYear) bool {
 	return my.CompareTo(other) > 0
