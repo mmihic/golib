@@ -1,0 +1,13 @@
+{
+  "title": "This is my title",
+  "authors": [
+    "joe@banana.com",
+    "jeff@banana.com",
+    "jane@banana.com"
+  ],
+  "tags": {
+    "bar": "zed",
+    "foo": "zork",
+    "mork": "ork"
+  }
+}
