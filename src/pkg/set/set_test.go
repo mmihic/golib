@@ -49,10 +49,10 @@ func TestSet_Union(t *testing.T) {
 	union := set1.Union(set2)
 	all := union.All()
 	sort.Strings(all)
-	assert.Equal(t, []string{"a", "b", "c", "d", "g", "f"}, all)
+	assert.Equal(t, []string{"a", "b", "c", "d", "f", "g"}, all)
 
 	union = set2.Union(set1)
 	all = union.All()
 	sort.Strings(all)
-	assert.Equal(t, []string{"a", "b", "c", "d", "g", "f"}, all)
+	assert.Equal(t, []string{"a", "b", "c", "d", "f", "g"}, all)
 }
