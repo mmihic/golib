@@ -1,6 +1,8 @@
 // Package set contains a basic generic Set type.
 package set
 
+import "encoding/json"
+
 // A Set is an unordered collection of values with the ability
 // to test for inclusion and exclusion.
 type Set[E comparable] map[E]struct{}
@@ -78,4 +80,20 @@ func (set Set[E]) Union(other Set[E]) Set[E] {
 	}
 
 	return result
+}
+
+// UnmarshalJSON unmarshals a set from a JSON array.
+func (set *Set[E]) UnmarshalJSON(b []byte) error {
+	var val []E
+	if err := json.Unmarshal(b, &val); err != nil {
+		return err
+	}
+
+	*set = NewSet(val...)
+	return nil
+}
+
+// MarshalJSON marshals a set as a JSON array.
+func (set Set[E]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(set.All())
 }

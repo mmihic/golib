@@ -1,10 +1,12 @@
 package set
 
 import (
+	"encoding/json"
 	"sort"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSet(t *testing.T) {
@@ -55,4 +57,27 @@ func TestSet_Union(t *testing.T) {
 	all = union.All()
 	sort.Strings(all)
 	assert.Equal(t, []string{"a", "b", "c", "d", "f", "g"}, all)
+}
+
+func TestSet_MarshalJSON(t *testing.T) {
+	set := NewSet("a", "b", "c", "d")
+	output, err := json.Marshal(set)
+	require.NoError(t, err)
+
+	// should be able to unmarshal into an array
+	var values []string
+	err = json.Unmarshal(output, &values)
+	require.NoError(t, err)
+	sort.Strings(values)
+	assert.Equal(t, values, []string{"a", "b", "c", "d"})
+}
+
+func TestSet_UnmarshalJSON(t *testing.T) {
+	var set Set[string]
+	err := json.Unmarshal([]byte(`["a", "b", "c", "d"]`), &set)
+	require.NoError(t, err)
+
+	all := set.All()
+	sort.Strings(all)
+	assert.Equal(t, []string{"a", "b", "c", "d"}, all)
 }
