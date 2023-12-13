@@ -17,8 +17,7 @@ func NewSet[E comparable](vals ...E) Set[E] {
 }
 
 // Add adds values to the set.
-func (set Set[E]) Add(val E, vals ...E) Set[E] {
-	set[val] = struct{}{}
+func (set Set[E]) Add(vals ...E) Set[E] {
 	for _, v := range vals {
 		set[v] = struct{}{}
 	}
@@ -26,8 +25,7 @@ func (set Set[E]) Add(val E, vals ...E) Set[E] {
 }
 
 // Del removes values from the set.
-func (set Set[E]) Del(val E, vals ...E) Set[E] {
-	delete(set, val)
+func (set Set[E]) Del(vals ...E) Set[E] {
 	for _, v := range vals {
 		delete(set, v)
 	}
