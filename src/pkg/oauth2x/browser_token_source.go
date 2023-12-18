@@ -176,7 +176,7 @@ const (
 	defaultErrorTemplate = `
 <html>
 	<head><title>Error exchanging auth code for token</title></head>
-	<body><p><b>Error exchanging auth code for token:</b>{.Error}</p></body>
+	<body><p><b>Error exchanging auth code for token:</b>{{.Error}}</p></body>
 </html>
 `
 )
