@@ -1,6 +1,7 @@
 package randx
 
 import (
+	"io"
 	"math/rand"
 	"testing"
 
@@ -19,3 +20,33 @@ func TestRand(t *testing.T) {
 	assert.Equal(t, 0.7544574084626943, r.Float64())
 	assert.Equal(t, "kevmfbrhpb", r.String(10, []rune("abcdefghijklmnopqrstuvwxyz")))
 }
+
+func TestSecureStringRand(t *testing.T) {
+	rng := NewSecureStringRand(&ringBufferReader{
+		b: []byte("abcdefghijklmnopqrstuvwxyz0123456789"),
+	})
+
+	s := rng.String(10, []rune("abcdefghijklmnopqrstuvwxyz"))
+	assert.Equal(t, "bcdefghijk", s)
+}
+
+type ringBufferReader struct {
+	b   []byte
+	pos int
+}
+
+func (r *ringBufferReader) Read(p []byte) (n int, err error) {
+	for i := range p {
+		if r.pos > len(r.b) {
+			r.pos = 0
+		}
+
+		p[i] = r.b[r.pos]
+		r.pos++
+	}
+	return len(p), nil
+}
+
+var (
+	_ io.Reader = &ringBufferReader{}
+)

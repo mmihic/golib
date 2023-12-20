@@ -2,6 +2,9 @@
 package randx
 
 import (
+	cryptrand "crypto/rand"
+	"io"
+	"math/big"
 	"math/rand"
 	"time"
 )
@@ -21,6 +24,8 @@ var (
 
 // Rand can generate random values of various types.
 type Rand interface {
+	StringRand
+
 	Int() int
 	Intn(n int) int
 	Int31() int32
@@ -30,6 +35,11 @@ type Rand interface {
 	Float32() float32
 	Float64() float64
 	Read(p []byte) (n int, err error)
+}
+
+// StringRand can generate random strings for an alphabet.
+// Supports both math/rand and crypto/rand.
+type StringRand interface {
 	String(n int, alphabet []rune) string
 }
 
@@ -58,6 +68,44 @@ func (r *rng) String(n int, alphabet []rune) string {
 }
 
 var _ Rand = &rng{}
+
+// NewSecureStringRand returns a StringRand that uses
+// a secure RNG.
+func NewSecureStringRand(r io.Reader) StringRand {
+	return secureStringRand{
+		r: r,
+	}
+}
+
+// SecureStringRand is a StringRand that uses a secure RNG.
+var (
+	SecureStringRand StringRand = NewSecureStringRand(cryptrand.Reader)
+)
+
+type secureStringRand struct {
+	r io.Reader
+}
+
+func (rnd secureStringRand) String(n int, alphabet []rune) string {
+	output := make([]rune, n)
+	for i := 0; i < n; i++ {
+		num, err := cryptrand.Int(rnd.r, big.NewInt(int64(len(alphabet))))
+		if err != nil {
+			panic(err)
+		}
+		output[i] = alphabet[num.Int64()]
+	}
+
+	return string(output)
+}
+
+// SecureString returns a string of length n, composed
+// of random characters from the provided alphabet, generated
+// from a secure RNG. If the input slice is nil, returns a random
+// mixed case alphanumeric string.
+func SecureString(n int, alphabet []rune) string {
+	return SecureStringRand.String(n, alphabet)
+}
 
 // String returns a string of length n, composed of random
 // characters from the provided alphabet. If the input
