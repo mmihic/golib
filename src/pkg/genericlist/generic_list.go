@@ -182,7 +182,7 @@ func (l *List[V]) Remove(e *Element[V]) V {
 	}
 
 	if e == l.back {
-		l.back = l.back.next
+		l.back = l.back.prev
 	}
 
 	e.unlink()

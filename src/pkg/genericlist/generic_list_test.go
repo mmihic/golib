@@ -155,6 +155,27 @@ func TestList_InsertAfter(t *testing.T) {
 	requireListEquals(t, l, []string{"foo", "zed", "quork", "bar"})
 }
 
+func TestList_Remove(t *testing.T) {
+	l := New[string]()
+
+	elements := []string{"foo", "bar", "zed", "quark", "mork"}
+	for _, val := range elements {
+		l.PushBack(val)
+	}
+
+	// Remove front
+	l.Remove(l.Front())
+	requireListEquals(t, l, []string{"bar", "zed", "quark", "mork"})
+
+	// Remove back
+	l.Remove(l.Back())
+	requireListEquals(t, l, []string{"bar", "zed", "quark"})
+
+	// Remove middle
+	l.Remove(l.Front().Next())
+	requireListEquals(t, l, []string{"bar", "quark"})
+}
+
 func requireListEquals[V any](t *testing.T, l *List[V], fromFront []V) {
 	// Confirm result iterating from front
 	e := l.Front()
