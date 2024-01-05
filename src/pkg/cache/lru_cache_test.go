@@ -461,17 +461,17 @@ func TestHonorsExpirations(t *testing.T) {
 	}, c.Statistics())
 }
 
-func assertEntryFound[K comparable, V any](t *testing.T, c *Cache[K, V], key K, expected V) {
+func assertEntryFound[K comparable, V any](t *testing.T, c Cache[K, V], key K, expected V) {
 	actual, err := c.Get(context.Background(), key)
 	require.NoError(t, err)
 	require.Equal(t, expected, actual)
 }
 
-func assertEntryNotFound[K comparable, V any](t *testing.T, c *Cache[K, V], key K) {
+func assertEntryNotFound[K comparable, V any](t *testing.T, c Cache[K, V], key K) {
 	assertEntryError(t, c, key, ErrNotFound.Error())
 }
 
-func assertEntryError[K comparable, V any](t *testing.T, c *Cache[K, V], key K, expected string) {
+func assertEntryError[K comparable, V any](t *testing.T, c Cache[K, V], key K, expected string) {
 	_, err := c.Get(context.Background(), key)
 	require.Error(t, err)
 	require.Contains(t, expected, err.Error())
