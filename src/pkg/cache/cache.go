@@ -26,6 +26,19 @@ type Statistics struct {
 	CurrentSize  int
 }
 
+// Add adds two Statistics, returning the aggregate result.
+func (s Statistics) Add(other Statistics) Statistics {
+	return Statistics{
+		Hits:         s.Hits + other.Hits,
+		Misses:       s.Misses + other.Misses,
+		LoadAttempts: s.LoadAttempts + other.LoadAttempts,
+		LoadFailures: s.LoadFailures + other.LoadFailures,
+		Expirations:  s.Expirations + other.Expirations,
+		Evictions:    s.Evictions + other.Evictions,
+		CurrentSize:  s.CurrentSize + other.CurrentSize,
+	}
+}
+
 // A LoadFn is a function that loads a cache entry on demand.
 type LoadFn[K comparable, V any] func(context.Context, K) (V, time.Time, error)
 
@@ -39,9 +52,6 @@ type Cache[K comparable, V any] interface {
 	Statistics() Statistics
 }
 
-// HashFn is a hashing function for shards.
-type HashFn[K comparable] func(key K) int
-
 // cacheProperties are the properties to the cache
 type cacheProperties[K comparable, V any] struct {
 	maxSize    int
@@ -49,7 +59,7 @@ type cacheProperties[K comparable, V any] struct {
 	clock      clockwork.Clock
 	loadFn     LoadFn[K, V]
 	hashFn     HashFn[K]
-	shardCount int
+	shardCount uint
 }
 
 // An Option is an option to a sharded cache.
@@ -90,6 +100,10 @@ func New[K comparable, V any](maxSize int, opts ...Option[K, V]) Cache[K, V] {
 
 	if props.clock == nil {
 		props.clock = clockwork.NewRealClock()
+	}
+
+	if props.shardCount > 1 {
+		return newShardedCache(props)
 	}
 
 	return newLRUCache(props)
