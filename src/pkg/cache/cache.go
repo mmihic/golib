@@ -46,10 +46,23 @@ type LoadFn[K comparable, V any] func(context.Context, K) (V, time.Time, error)
 // eviction policy. Supports both read-through and write-ahead caching, allows
 // for synchronous and asynchronous eviction, and supports TTLs on cache entries.
 type Cache[K comparable, V any] interface {
+	// Get retrieves an entry from the cache, loading it on demand
+	// if the entry is not present and a load function has been
+	// specified.
 	Get(ctx context.Context, k K) (V, error)
+
+	// Put writes an entry to the cache, replacing the existing entry.
 	Put(_ context.Context, k K, v V)
+
+	// PutWithTTL writes an entry to the cache with an explicit TTL, replacing
+	// the existing entry and TTL.
 	PutWithTTL(_ context.Context, k K, v V, expiry time.Time)
+
+	// Statistics returns a copy of the cache statistics.
 	Statistics() Statistics
+
+	// ShardStatistics returns the statistics for each shard.
+	ShardStatistics() []Statistics
 }
 
 // cacheProperties are the properties to the cache

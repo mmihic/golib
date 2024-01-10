@@ -16,10 +16,10 @@ type LRUTestSuite struct {
 // TestSyncEviction tests that when using synchronous eviction, the least recently used
 // entry is evicted as soon as we reach the max size.
 //
-// NB(mmihic): We only test this directly against LRU caches because in sharded caches
-// the distribution of keys over shards might result in a different eviction order (e.g.
-// the LRU entry for the shard will be evicted, but this may not be the LRU entry for the
-// cache as a whole)
+// NB(mmihic): We test this differently for LRU caches vs sharded caches because in
+// sharded caches the distribution of keys over shards might result in a different
+// eviction order (e.g. when a shard grows to big the LRU entry for that shard will
+// be evicted, but this may not be the LRU entry for the cache as a whole)
 func (s *LRUTestSuite) TestSyncEviction() {
 	entries := map[string]string{
 		"foo":       "bar",
@@ -75,6 +75,18 @@ func (s *LRUTestSuite) TestSyncEviction() {
 		Misses:       2,
 		CurrentSize:  3,
 	}, c.Statistics())
+
+	// ShardStatistics should return a single shard containing the
+	// statistics for the whole cache
+	s.Require().Equal([]Statistics{
+		{
+			LoadAttempts: 8,
+			Evictions:    3,
+			Hits:         5,
+			Misses:       2,
+			CurrentSize:  3,
+		},
+	}, c.ShardStatistics())
 }
 
 func TestLRUCache(t *testing.T) {

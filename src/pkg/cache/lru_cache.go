@@ -80,6 +80,12 @@ func (c *lruCache[K, V]) Statistics() Statistics {
 	return stats
 }
 
+// ShardStatistics returns the statistics for each shard.
+// LRUCaches are just a single shard (themselves)
+func (c *lruCache[K, V]) ShardStatistics() []Statistics {
+	return []Statistics{c.Statistics()}
+}
+
 func (c *lruCache[K, V]) accessValueLocked(
 	ctx context.Context, k K, entry *entry[K, V],
 ) (V, error) {

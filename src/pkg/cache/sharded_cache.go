@@ -63,6 +63,15 @@ func (c *shardedCache[K, V]) Statistics() Statistics {
 	return stats
 }
 
+func (c *shardedCache[K, V]) ShardStatistics() []Statistics {
+	shardStats := make([]Statistics, len(c.shards))
+	for i, shard := range c.shards {
+		shardStats[i] = shard.Statistics()
+	}
+
+	return shardStats
+}
+
 func (c *shardedCache[K, V]) shard(k K) Cache[K, V] {
 	hash := c.hashFn(k)
 	if hash < 0 {
