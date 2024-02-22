@@ -11,11 +11,11 @@ import (
 )
 
 const (
-	writeGoldenFile = false
+	writeGoldenFile = true
 )
 
 func TestOutputter_WriteOutputJSON(t *testing.T) {
-	out := &Outputter{
+	out := &Output{
 		Output: OutputToTemp,
 	}
 
@@ -42,9 +42,9 @@ func TestOutputter_WriteOutputJSON(t *testing.T) {
 }
 
 func TestOutputter_WriteOutputPrettyJSON(t *testing.T) {
-	out := &Outputter{
-		Output:      OutputToTemp,
-		PrettyPrint: true,
+	out := &Output{
+		Output:  OutputToTemp,
+		Compact: true,
 	}
 
 	err := out.WriteOutput(struct {
@@ -71,7 +71,7 @@ func TestOutputter_WriteOutputPrettyJSON(t *testing.T) {
 }
 
 func TestOutputter_WriteOutputWriter(t *testing.T) {
-	out := &Outputter{
+	out := &Output{
 		Output: OutputToTemp,
 	}
 
@@ -89,7 +89,7 @@ func TestOutputter_WriteOutputWriter(t *testing.T) {
 	assertFileMatches(t, out, "testdata/plain.txt")
 }
 
-func assertFileMatches(t *testing.T, out *Outputter, testdata string) {
+func assertFileMatches(t *testing.T, out *Output, testdata string) {
 	outputf, err := os.Open(out.Output)
 	require.NoError(t, err)
 

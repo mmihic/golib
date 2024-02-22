@@ -1,0 +1,14 @@
+[
+  {
+    "title": "This is my title",
+    "author": "joe@banana.com"
+  },
+  {
+    "title": "This is my other title",
+    "author": "jane@banana.com"
+  },
+  {
+    "title": "This is my third title",
+    "author": "jackie@banana.com"
+  }
+]

@@ -13,14 +13,14 @@ const (
 	OutputToTemp = "~~temp~~"
 )
 
-// Outputter is a mix-in for commands that generate output.
-type Outputter struct {
-	PrettyPrint bool   `name:"pretty-print"`
-	Output      string `name:"output" short:"o" description:"output location"`
+// Output is a mix-in for commands that generate output.
+type Output struct {
+	Compact bool   `name:"compact" description:"use compact format"`
+	Output  string `name:"output" short:"o" description:"output location"`
 }
 
 // WriteOutput writes the given value to the requested output.
-func (cmd *Outputter) WriteOutput(v any) error {
+func (cmd *Output) WriteOutput(v any) error {
 	var out io.Writer
 	if cmd.Output == "" || cmd.Output == "--" {
 		out = os.Stdout
@@ -51,7 +51,7 @@ func (cmd *Outputter) WriteOutput(v any) error {
 
 	// Otherwise marshal as JSON
 	enc := json.NewEncoder(out)
-	if cmd.PrettyPrint {
+	if !cmd.Compact {
 		enc.SetIndent("", "  ")
 	}
 
