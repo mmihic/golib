@@ -80,6 +80,25 @@ func (set Set[E]) Union(other Set[E]) Set[E] {
 	return result
 }
 
+// Contains returns true if one set contains all
+// elements of the other.
+func (set Set[E]) Contains(other Set[E]) bool {
+	for v := range other {
+		if !set.Has(v) {
+			return false
+		}
+	}
+
+	return true
+}
+
+// Equal compares two sets for exact equality.
+func (set Set[E]) Equal(other Set[E]) bool {
+	// Two sets exactly match if both are the same size and one
+	// contains all elements of the other
+	return len(set) == len(other) && set.Contains(other)
+}
+
 // UnmarshalJSON unmarshals a set from a JSON array.
 func (set *Set[E]) UnmarshalJSON(b []byte) error {
 	var val []E

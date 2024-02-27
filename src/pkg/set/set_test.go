@@ -59,6 +59,23 @@ func TestSet_Union(t *testing.T) {
 	assert.Equal(t, []string{"a", "b", "c", "d", "f", "g"}, all)
 }
 
+func TestSet_Contains(t *testing.T) {
+	set1 := NewSet("a", "b", "c", "d")
+	assert.True(t, set1.Contains(NewSet("a", "b")))
+	assert.True(t, set1.Contains(NewSet("c", "b")))
+	assert.False(t, set1.Contains(NewSet("a", "b", "c", "d", "e")))
+	assert.False(t, set1.Contains(NewSet("a", "g")))
+	assert.False(t, set1.Contains(NewSet("z")))
+}
+
+func TestSet_Equal(t *testing.T) {
+	set1 := NewSet("a", "b", "c", "d")
+	assert.True(t, set1.Equal(NewSet("a", "b", "c", "d")))
+	assert.False(t, set1.Equal(NewSet("a", "b", "c", "d", "e")))
+	assert.False(t, set1.Equal(NewSet("c", "b")))
+	assert.False(t, set1.Equal(NewSet("a", "b", "c", "g")))
+}
+
 func TestSet_MarshalJSON(t *testing.T) {
 	set := NewSet("a", "b", "c", "d")
 	output, err := json.Marshal(set)
