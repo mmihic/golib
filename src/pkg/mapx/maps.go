@@ -9,3 +9,13 @@ func Keys[K comparable, V any](m map[K]V) []K {
 	}
 	return keys
 }
+
+// Values returns all values in a map.
+func Values[K comparable, V any](m map[K]V) []V {
+	vals := make([]V, 0, len(m))
+	for _, v := range m {
+		vals = append(vals, v)
+	}
+
+	return vals
+}
