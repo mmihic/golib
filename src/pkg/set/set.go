@@ -1,7 +1,11 @@
 // Package set contains a basic generic Set type.
 package set
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"gopkg.in/yaml.v3"
+)
 
 // A Set is an unordered collection of values with the ability
 // to test for inclusion and exclusion.
@@ -113,4 +117,20 @@ func (set *Set[E]) UnmarshalJSON(b []byte) error {
 // MarshalJSON marshals a set as a JSON array.
 func (set Set[E]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(set.All())
+}
+
+// UnmarshalYAML unmarshals a set from a YAML array.
+func (set *Set[E]) UnmarshalYAML(n *yaml.Node) error {
+	var val []E
+	if err := n.Decode(&val); err != nil {
+		return err
+	}
+
+	*set = NewSet(val...)
+	return nil
+}
+
+// MarshalYAML marshals a set as a YAML array.
+func (set Set[E]) MarshalYAML() (any, error) {
+	return set.All(), nil
 }

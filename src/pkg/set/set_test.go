@@ -7,6 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 )
 
 func TestSet(t *testing.T) {
@@ -97,4 +98,27 @@ func TestSet_UnmarshalJSON(t *testing.T) {
 	all := set.All()
 	sort.Strings(all)
 	assert.Equal(t, []string{"a", "b", "c", "d"}, all)
+}
+
+func TestSet_UnmarshalYAML(t *testing.T) {
+	var set Set[string]
+	err := yaml.Unmarshal([]byte(`["a", "b", "c", "d"]`), &set)
+	require.NoError(t, err)
+
+	all := set.All()
+	sort.Strings(all)
+	assert.Equal(t, []string{"a", "b", "c", "d"}, all)
+}
+
+func TestSet_MarshalYAML(t *testing.T) {
+	set := NewSet("a", "b", "c", "d")
+	output, err := yaml.Marshal(set)
+	require.NoError(t, err)
+
+	// should be able to unmarshal into an array
+	var values []string
+	err = yaml.Unmarshal(output, &values)
+	require.NoError(t, err)
+	sort.Strings(values)
+	assert.Equal(t, values, []string{"a", "b", "c", "d"})
 }
