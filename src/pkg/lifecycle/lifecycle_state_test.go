@@ -17,7 +17,7 @@ func TestStateTransitions(t *testing.T) {
 	st := NewState()
 
 	go func() {
-		<-st.Started()
+		<-st.Running()
 		close(startGoRoutineDone)
 	}()
 

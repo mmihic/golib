@@ -1,3 +1,5 @@
+// Package lifecycle contains utilities making it easier to manage common
+// application lifecycle.
 package lifecycle
 
 import (
@@ -13,8 +15,16 @@ const (
 	stateClosed
 )
 
-// State is a very simple goroutine-safe Init -> Run -> Stop -> Close state machine,
-// allowing goroutines to listen on state transitions.
+// State is a very simple goroutine-safe Init -> Running -> Stopped -> Closed state machine,
+// allowing goroutines to listen on state transitions. States start in the Init state,
+// then transition to the Running state in response to a call to the Start method. Applications
+// can use the IfRunning method to perform a block if and only if the state is Running.
+//
+// States have a two part termination - first being Stopped (through a call to Stop) and then
+// being Closed (through a call to Close).
+//
+// Goroutines can block on the Running(), Stopped(), or Closed() channels to wait for
+// the state to transition as desired.
 type State struct {
 	mut     sync.RWMutex
 	state   state
@@ -23,6 +33,7 @@ type State struct {
 	closed  chan struct{}
 }
 
+// NewState creates a new State in the Initialized state,
 func NewState() *State {
 	return &State{
 		started: make(chan struct{}),
@@ -31,7 +42,7 @@ func NewState() *State {
 	}
 }
 
-// Start starts the lifecycle
+// Start transitions from the "Initialized" state to the "Running" state.
 func (s *State) Start() bool {
 	s.mut.Lock()
 	defer s.mut.Unlock()
@@ -45,9 +56,9 @@ func (s *State) Start() bool {
 	return true
 }
 
-// Stop stops the lifecycle, unblocking
-// any goroutines waiting on the Stopped
-// channel.
+// Stop transitions from the "Running" state to the "Stopped" state.
+// Goroutines blocked on the Stopped() channel will wake up once this
+// transition is complete.
 func (s *State) Stop() bool {
 	s.mut.Lock()
 	defer s.mut.Unlock()
@@ -62,9 +73,9 @@ func (s *State) Stop() bool {
 	return true
 }
 
-// Close marks the lifecycle as fully closed,
-// unblocking any goroutines waiting on the
-// closed channel.
+// Close transitions from the "Stopped" state to the "Closed" state.
+// Goroutines blocked on the Closed() channel will wake up once this
+// transition is complete.
 func (s *State) Close() bool {
 	s.mut.Lock()
 	defer s.mut.Unlock()
@@ -78,20 +89,19 @@ func (s *State) Close() bool {
 	return true
 }
 
-// Started returns a channel that goroutines can block on to
-// wait until Start() is called.
-func (s *State) Started() <-chan struct{} { return s.started }
+// Running returns a channel that goroutines can block on to
+// wait until the state is "Running"
+func (s *State) Running() <-chan struct{} { return s.started }
 
 // Stopped returns a channel that goroutines can block on to
-// wait until Stop() is called.
+// wait until the state is "Stopped"
 func (s *State) Stopped() <-chan struct{} { return s.stopped }
 
 // Closed returns a channel that goroutines can block on to
-// wait until Close() is called.
+// wait until the stte is "Closed"
 func (s *State) Closed() <-chan struct{} { return s.closed }
 
-// IfRunning runs the given block only if the state
-// is in the running state.
+// IfRunning runs the given block only if the state is in the "Running" state.
 func (s *State) IfRunning(fn func()) bool {
 	s.mut.RLock()
 	defer s.mut.RUnlock()
