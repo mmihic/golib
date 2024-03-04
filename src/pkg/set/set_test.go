@@ -11,7 +11,7 @@ import (
 )
 
 func TestSet(t *testing.T) {
-	set := NewSet("a", "b", "c", "d")
+	set := New("a", "b", "c", "d")
 	assert.True(t, set.Has("a"))
 	assert.True(t, set.Has("d"))
 	assert.False(t, set.Has("f"))
@@ -31,8 +31,8 @@ func TestSet(t *testing.T) {
 }
 
 func TestSet_Intersect(t *testing.T) {
-	set1 := NewSet("a", "b", "c", "d")
-	set2 := NewSet("a", "c", "g", "f")
+	set1 := New("a", "b", "c", "d")
+	set2 := New("a", "c", "g", "f")
 
 	intersect := set1.Intersect(set2)
 	all := intersect.All()
@@ -46,8 +46,8 @@ func TestSet_Intersect(t *testing.T) {
 }
 
 func TestSet_Union(t *testing.T) {
-	set1 := NewSet("a", "b", "c", "d")
-	set2 := NewSet("a", "c", "g", "f")
+	set1 := New("a", "b", "c", "d")
+	set2 := New("a", "c", "g", "f")
 
 	union := set1.Union(set2)
 	all := union.All()
@@ -61,24 +61,24 @@ func TestSet_Union(t *testing.T) {
 }
 
 func TestSet_Contains(t *testing.T) {
-	set1 := NewSet("a", "b", "c", "d")
-	assert.True(t, set1.Contains(NewSet("a", "b")))
-	assert.True(t, set1.Contains(NewSet("c", "b")))
-	assert.False(t, set1.Contains(NewSet("a", "b", "c", "d", "e")))
-	assert.False(t, set1.Contains(NewSet("a", "g")))
-	assert.False(t, set1.Contains(NewSet("z")))
+	set1 := New("a", "b", "c", "d")
+	assert.True(t, set1.Contains(New("a", "b")))
+	assert.True(t, set1.Contains(New("c", "b")))
+	assert.False(t, set1.Contains(New("a", "b", "c", "d", "e")))
+	assert.False(t, set1.Contains(New("a", "g")))
+	assert.False(t, set1.Contains(New("z")))
 }
 
 func TestSet_Equal(t *testing.T) {
-	set1 := NewSet("a", "b", "c", "d")
-	assert.True(t, set1.Equal(NewSet("a", "b", "c", "d")))
-	assert.False(t, set1.Equal(NewSet("a", "b", "c", "d", "e")))
-	assert.False(t, set1.Equal(NewSet("c", "b")))
-	assert.False(t, set1.Equal(NewSet("a", "b", "c", "g")))
+	set1 := New("a", "b", "c", "d")
+	assert.True(t, set1.Equal(New("a", "b", "c", "d")))
+	assert.False(t, set1.Equal(New("a", "b", "c", "d", "e")))
+	assert.False(t, set1.Equal(New("c", "b")))
+	assert.False(t, set1.Equal(New("a", "b", "c", "g")))
 }
 
 func TestSet_MarshalJSON(t *testing.T) {
-	set := NewSet("a", "b", "c", "d")
+	set := New("a", "b", "c", "d")
 	output, err := json.Marshal(set)
 	require.NoError(t, err)
 
@@ -111,7 +111,7 @@ func TestSet_UnmarshalYAML(t *testing.T) {
 }
 
 func TestSet_MarshalYAML(t *testing.T) {
-	set := NewSet("a", "b", "c", "d")
+	set := New("a", "b", "c", "d")
 	output, err := yaml.Marshal(set)
 	require.NoError(t, err)
 

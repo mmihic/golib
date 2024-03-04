@@ -11,8 +11,8 @@ import (
 // to test for inclusion and exclusion.
 type Set[E comparable] map[E]struct{}
 
-// NewSet creates a new set from a collection of values.
-func NewSet[E comparable](vals ...E) Set[E] {
+// New creates a new set from a collection of values.
+func New[E comparable](vals ...E) Set[E] {
 	set := make(Set[E], len(vals))
 	for _, v := range vals {
 		set.Add(v)
@@ -59,7 +59,7 @@ func (set Set[E]) Len() int {
 // Intersect computes the intersection of two sets, producing
 // a set that only contains the values present in both sets.
 func (set Set[E]) Intersect(other Set[E]) Set[E] {
-	result := NewSet[E]()
+	result := New[E]()
 	for v := range set {
 		if other.Has(v) {
 			result.Add(v)
@@ -72,7 +72,7 @@ func (set Set[E]) Intersect(other Set[E]) Set[E] {
 // Union computes the union of two sets, producing a set
 // that contains the values present in either set.
 func (set Set[E]) Union(other Set[E]) Set[E] {
-	result := NewSet[E]()
+	result := New[E]()
 	for v := range set {
 		result.Add(v)
 	}
@@ -110,7 +110,7 @@ func (set *Set[E]) UnmarshalJSON(b []byte) error {
 		return err
 	}
 
-	*set = NewSet(val...)
+	*set = New(val...)
 	return nil
 }
 
@@ -126,7 +126,7 @@ func (set *Set[E]) UnmarshalYAML(n *yaml.Node) error {
 		return err
 	}
 
-	*set = NewSet(val...)
+	*set = New(val...)
 	return nil
 }
 
