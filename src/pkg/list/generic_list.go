@@ -1,6 +1,6 @@
-// Package genericlist contains an implementation of a doubly-linked list
+// Package list contains an implementation of a doubly-linked list
 // that uses generics. The list is not go-routine safe.
-package genericlist
+package list
 
 // Element is an element of a doubly linked list
 type Element[V any] struct {
