@@ -11,7 +11,7 @@ func Keys[K comparable, V any, M ~map[K]V](m M) []K {
 }
 
 // Values returns all values in a map.
-func Values[K comparable, V any, M ~map[K]V](m map[K]V) []V {
+func Values[K comparable, V any, M ~map[K]V](m M) []V {
 	vals := make([]V, 0, len(m))
 	for _, v := range m {
 		vals = append(vals, v)
