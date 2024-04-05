@@ -19,6 +19,6 @@ func TestMax(t *testing.T) {
 }
 
 func TestMedian(t *testing.T) {
-	assert.Equal(t, Median([]int{100, 125, 375, 290}), 250)
-	assert.Equal(t, Median([]int{1098, 100, 125, 375, 290}), 125)
+	assert.Equal(t, 207.5, Median([]float64{100, 125, 375, 290}))
+	assert.Equal(t, 290.0, Median([]float64{1098, 100, 125, 375, 290}))
 }
