@@ -8,6 +8,7 @@ import (
 // Median finds the median of a slice of numeric values.
 func Median[T constraints.Integer | constraints.Float, S ~[]T](s S) T {
 	nCopy := slices.Clone(s)
+	slices.Sort(nCopy)
 	ln := len(nCopy)
 	switch {
 	case ln == 0:
