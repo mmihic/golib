@@ -7,7 +7,7 @@ import (
 )
 
 func TestMean(t *testing.T) {
-	assert.Equal(t, Mean([]int{1098, 100, 125, 375, 290}), 397)
+	assert.Equal(t, Mean([]float64{1098, 100, 125, 375, 290}), 397.6)
 }
 
 func TestMin(t *testing.T) {
