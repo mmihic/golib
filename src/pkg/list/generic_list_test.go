@@ -190,7 +190,7 @@ func requireListEquals[V any](t *testing.T, l *List[V], fromFront []V) {
 	// Confirm result iterating from back
 	fromBack := slices.Clone(fromFront)
 	slices.Reverse(fromBack)
-	
+
 	e = l.Back()
 	for i, expected := range fromBack {
 		require.NotNil(t, e, "element %d is nil", i)
