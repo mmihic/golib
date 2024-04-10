@@ -4,8 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-
-	"github.com/mmihic/golib/src/pkg/slices"
+	"golang.org/x/exp/slices"
 )
 
 func TestList_NotMyList(t *testing.T) {
@@ -70,9 +69,11 @@ func TestList_EmptyList(t *testing.T) {
 
 func TestList_PushFront(t *testing.T) {
 	input := []string{"foo", "bar", "zed", "mork", "ork", "banana"}
+	reversed := slices.Clone(input)
+	slices.Reverse(reversed)
 
 	l := New[string]()
-	testPushElement(t, l, l.PushFront, input, slices.Reversed(input))
+	testPushElement(t, l, l.PushFront, input, reversed)
 }
 
 func TestList_PushBack(t *testing.T) {
@@ -187,7 +188,9 @@ func requireListEquals[V any](t *testing.T, l *List[V], fromFront []V) {
 	require.Nil(t, e, "more elements than expected")
 
 	// Confirm result iterating from back
-	fromBack := slices.Reversed(fromFront)
+	fromBack := slices.Clone(fromFront)
+	slices.Reverse(fromBack)
+	
 	e = l.Back()
 	for i, expected := range fromBack {
 		require.NotNil(t, e, "element %d is nil", i)
