@@ -1,4 +1,4 @@
-package csvmarshal
+package csv
 
 import (
 	"bufio"
@@ -11,8 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mmihic/golib/src/pkg/ptr"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/mmihic/golib/src/pkg/ptr"
 )
 
 const writeFiles = false
@@ -22,6 +23,13 @@ type Address struct {
 	City    string
 	State   string
 	Zipcode string
+}
+
+type AddressWithTags struct {
+	Street1 string `csv:"street_1"`
+	City    string `csv:"city"`
+	State   string `csv:"state"`
+	Zipcode string `csv:"zip_code"`
 }
 
 type Person struct {
@@ -37,6 +45,12 @@ type Place struct {
 type PlaceWithOptionalName struct {
 	Name    *string
 	Address // anonymous
+}
+
+type PlaceWithTags struct {
+	Name             string          `csv:"name"`
+	MailingAddress   AddressWithTags `csv:"mailing_address"`
+	SecondaryAddress AddressWithTags `csv:"-"`
 }
 
 func TestMarshaller(t *testing.T) {
@@ -55,6 +69,26 @@ func TestMarshaller(t *testing.T) {
 				Zipcode: "10014",
 			},
 			"testdata/simple_struct.csv",
+			false,
+		},
+		{
+			"struct with tags",
+			PlaceWithTags{
+				Name: "office",
+				MailingAddress: AddressWithTags{
+					Street1: "209 W Houston St",
+					City:    "New York",
+					State:   "NY",
+					Zipcode: "10014",
+				},
+				SecondaryAddress: AddressWithTags{
+					Street1: "151 South St",
+					City:    "New York",
+					State:   "NY",
+					Zipcode: "10038",
+				},
+			},
+			"testdata/struct_with_tags.csv",
 			false,
 		},
 		{
@@ -355,7 +389,7 @@ func assertMarshalMatches(t *testing.T, val any, filename string, anyOrder bool)
 		return false
 	}
 
-	err = m.Marshal(w, val, "")
+	err = m.Encode(w, val, "")
 	if !assert.NoError(t, err) {
 		return false
 	}

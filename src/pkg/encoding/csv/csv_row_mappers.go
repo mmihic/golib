@@ -1,4 +1,4 @@
-package csvmarshal
+package csv
 
 import (
 	"fmt"
@@ -27,6 +27,20 @@ func newStructMapper(typ reflect.Type) (RowMapper, error) {
 	)
 	for i := 0; i < typ.NumField(); i++ {
 		field := typ.Field(i)
+
+		// Look for a csv: tag on the field to determine the header prefix or whether
+		// to skip. If there is no csv: tag, process the field and use the name of the
+		// field as the header prefix.
+		csvTag := field.Tag.Get("csv")
+		if csvTag == "-" {
+			continue
+		}
+
+		headerName := field.Name
+		if csvTag != "" {
+			headerName = csvTag
+		}
+
 		fields = append(fields, field)
 
 		// Get the converter for the field
@@ -42,14 +56,14 @@ func newStructMapper(typ reflect.Type) (RowMapper, error) {
 		if fieldHeaders := fieldMapper.Headers(); len(fieldHeaders) > 0 {
 			prefix := ""
 			if !field.Anonymous {
-				prefix = field.Name + "."
+				prefix = headerName + "."
 			}
 
 			for _, fieldHeader := range fieldHeaders {
 				headers = append(headers, prefix+fieldHeader)
 			}
 		} else {
-			headers = append(headers, field.Name)
+			headers = append(headers, headerName)
 		}
 	}
 

@@ -1,4 +1,4 @@
-package csvmarshal
+package csv
 
 import (
 	"encoding/csv"
@@ -9,7 +9,7 @@ import (
 // A Marshaller marshals objects into CSV format.
 type Marshaller interface {
 	Headers() []string
-	Marshal(w *csv.Writer, val any, nilValue string) error
+	Encode(w *csv.Writer, val any, nilValue string) error
 }
 
 // NewMarshaller creates a marshaller for the given type.
@@ -53,7 +53,7 @@ func (m *singleRowMarshaller) Headers() []string {
 	return m.rowMapper.Headers()
 }
 
-func (m *singleRowMarshaller) Marshal(w *csv.Writer, val any, nilValue string) error {
+func (m *singleRowMarshaller) Encode(w *csv.Writer, val any, nilValue string) error {
 	rv, ok := val.(reflect.Value)
 	if !ok {
 		rv = reflect.ValueOf(val)
@@ -90,7 +90,7 @@ func (m *sliceMarshaller) Headers() []string {
 	return m.elemMapper.Headers()
 }
 
-func (m *sliceMarshaller) Marshal(w *csv.Writer, val any, nilValue string) error {
+func (m *sliceMarshaller) Encode(w *csv.Writer, val any, nilValue string) error {
 	rv, ok := val.(reflect.Value)
 	if !ok {
 		rv = reflect.ValueOf(val)
@@ -139,7 +139,7 @@ func newMapMarshaller(typ reflect.Type) (Marshaller, error) {
 	}, nil
 }
 
-func (m *mapMarshaller) Marshal(w *csv.Writer, val any, nilValue string) error {
+func (m *mapMarshaller) Encode(w *csv.Writer, val any, nilValue string) error {
 	rv, ok := val.(reflect.Value)
 	if !ok {
 		rv = reflect.ValueOf(val)
