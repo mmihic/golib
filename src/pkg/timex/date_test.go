@@ -46,6 +46,9 @@ func TestDate_CompareTo(t *testing.T) {
 			assert.Equal(t, tt.want, baseline.CompareTo(against))
 			assert.Equal(t, 0-tt.want, against.CompareTo(baseline))
 			assert.Equal(t, tt.want < 0, baseline.Less(against))
+			assert.Equal(t, tt.want < 0, baseline.Before(against))
+			assert.Equal(t, tt.want > 0, baseline.After(against))
+			assert.Equal(t, tt.want == 0, baseline.Equal(against))
 		})
 	}
 }

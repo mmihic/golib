@@ -40,6 +40,9 @@ func TestMonthYear_CompareTo(t *testing.T) {
 			}
 
 			assert.Equal(t, tt.want < 0, baseline.Less(other))
+			assert.Equal(t, tt.want < 0, baseline.Before(other))
+			assert.Equal(t, tt.want > 0, baseline.After(other))
+			assert.Equal(t, tt.want == 0, baseline.Equal(other))
 		})
 	}
 }
@@ -107,6 +110,36 @@ func TestMonthYear_EndOfMonth(t *testing.T) {
 	}
 }
 
+func TestMonthYear_AddMonths(t *testing.T) {
+	start := MustParseMonthYear("2021-10")
+	for _, tt := range []struct {
+		numMonths int
+		expected  MonthYear
+	}{
+		{0, start},
+		{1, MustParseMonthYear("2021-11")},
+		{2, MustParseMonthYear("2021-12")},
+		{3, MustParseMonthYear("2022-01")},
+		{4, MustParseMonthYear("2022-02")},
+		{12, MustParseMonthYear("2022-10")},
+		{24, MustParseMonthYear("2023-10")},
+		{26, MustParseMonthYear("2023-12")},
+		{-1, MustParseMonthYear("2021-09")},
+		{-2, MustParseMonthYear("2021-08")},
+		{-3, MustParseMonthYear("2021-07")},
+		{-4, MustParseMonthYear("2021-06")},
+		{-5, MustParseMonthYear("2021-05")},
+		{-10, MustParseMonthYear("2020-12")},
+		{-12, MustParseMonthYear("2020-10")},
+		{-24, MustParseMonthYear("2019-10")},
+		{-26, MustParseMonthYear("2019-08")},
+	} {
+		actual := start.AddMonths(tt.numMonths)
+		assert.Equalf(t, tt.expected, actual,
+			"adding %d months did not produce correct results", tt.numMonths)
+	}
+}
+
 func TestMonthYear_NextMonth(t *testing.T) {
 	actual := MustParseMonthYear("2021-10")
 	for _, want := range []MonthYear{
@@ -121,10 +154,32 @@ func TestMonthYear_NextMonth(t *testing.T) {
 	}
 }
 
+func TestMonthYear_PriorMonth(t *testing.T) {
+	actual := MustParseMonthYear("2021-02")
+	for _, want := range []MonthYear{
+		MustParseMonthYear("2021-01"),
+		MustParseMonthYear("2020-12"),
+		MustParseMonthYear("2020-11"),
+		MustParseMonthYear("2020-10"),
+		MustParseMonthYear("2020-09"),
+	} {
+		actual = actual.PriorMonth()
+		require.Equal(t, actual, want)
+	}
+}
+
 func TestMonthsBetween(t *testing.T) {
 	first, second := MustParseMonthYear("2021-10"), MustParseMonthYear("2022-03")
-	assert.Equal(t, 6, MonthsBetween(first, second))
-	assert.Equal(t, 6, MonthsBetween(second, first))
+	assert.Equal(t, 5, MonthsBetween(first, second))
+	assert.Equal(t, 5, MonthsBetween(second, first))
+
+	first, second = MustParseMonthYear("2021-10"), MustParseMonthYear("2024-04")
+	assert.Equal(t, 30, MonthsBetween(first, second))
+	assert.Equal(t, 30, MonthsBetween(second, first))
+
+	first, second = MustParseMonthYear("2021-10"), MustParseMonthYear("2023-03")
+	assert.Equal(t, 17, MonthsBetween(first, second))
+	assert.Equal(t, 17, MonthsBetween(second, first))
 }
 
 func TestMonthYearJSON(t *testing.T) {
