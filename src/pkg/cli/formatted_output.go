@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/mmihic/golib/src/pkg/csvmarshal"
+	csv2 "github.com/mmihic/golib/src/pkg/encoding/csv"
 )
 
 // A Formatter formats an output.
@@ -81,7 +81,7 @@ func init() {
 	}))
 
 	RegisterFormatter(FormatCSV, FormatterFn(func(w io.Writer, compact bool, val any) error {
-		m, err := csvmarshal.NewMarshaller(reflect.TypeOf(val))
+		m, err := csv2.NewMarshaller(reflect.TypeOf(val))
 		if err != nil {
 			return err
 		}
@@ -95,6 +95,6 @@ func init() {
 			}
 		}
 
-		return m.Marshal(csvw, val, "")
+		return m.Encode(csvw, val, "")
 	}))
 }
